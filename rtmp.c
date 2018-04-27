@@ -1,12 +1,19 @@
-/* 
- * getaddrinfo.c - Simple example of using getaddrinfo(3) function.
- * 
- * Michal Ludvig <michal@logix.cz> (c) 2002, 2003
- * http://www.logix.cz/michal/devel/
- *
- * License: public domain.
- */
+/*
+Copyright (C) 2018-2019 Peter Kung(peterkoug@gmail.com) All Rights Reserved
 
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -15,12 +22,12 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-char addrstr[100];
+char addrstr[64];
 
-int lookup_host (const char *host)
+int host_lookup(const char *host)
 {
 	struct addrinfo hints, *res;
-	int errcode;
+	int err;
 	void *ptr;
 
 	memset (&hints, 0, sizeof (hints));
@@ -28,8 +35,8 @@ int lookup_host (const char *host)
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags |= AI_CANONNAME;
 
-	errcode = getaddrinfo (host, NULL, &hints, &res);
-	if (errcode != 0) {
+	err = getaddrinfo (host, NULL, &hints, &res);
+	if (err != 0) {
 		perror ("getaddrinfo");
 		return -1;
 	}
@@ -41,7 +48,7 @@ int lookup_host (const char *host)
 			ptr = &((struct sockaddr_in *) res->ai_addr)->sin_addr;
 			break;
 	}
-	inet_ntop (res->ai_family, ptr, addrstr, 100);
+	inet_ntop (res->ai_family, ptr, addrstr, 64);
 
 	return 0;
 }
@@ -111,7 +118,7 @@ int main (int argc, char *argv[])
 
 
     memset(addrstr, 0, sizeof(addrstr));
-	lookup_host (hostname);
+    host_lookup(hostname);
 
 	printf ("IPv4 address: %s\n", addrstr);
 
